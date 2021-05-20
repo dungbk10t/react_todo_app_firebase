@@ -6,11 +6,12 @@ import './styles/main.css';
 /* コンポーネント */
 import Todo from './components/Todo';
 import Login from "./components/Login";
+import Upload from "./components/Upload";
 
-import { auth, storeUserInfo } from "./lib/firebase";
+import { auth, storeUserInfo, updateUser } from "./lib/firebase";
 
 function App() {
-    const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState([]);
 
   useEffect(() => {
@@ -28,11 +29,16 @@ function App() {
     auth.signOut();
   };
 
+  const handleImageChanged = async downlodUrl => {
+    await updateUser(user, downlodUrl);
+  }
+
   const HeaderContent = () => {
     if (user) {
       return (
         <div class="navbar-end">
           <div class="navbar-item">
+            <Upload userImage={user.image} onSelectImage={handleImageChanged} />
             {user.name}
           </div>
           <div class="navbar-item">
@@ -44,7 +50,7 @@ function App() {
       return (<Login />)
     }
   }
-  
+
   return (
     <div className="container is-fluid">
       <header class="navbar">
