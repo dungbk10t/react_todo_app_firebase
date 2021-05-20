@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import useFbStorage from '../hooks/fbStorage';
 
 /* 
   【Todoのデータ構成】
@@ -19,7 +20,7 @@ import useStorage from '../hooks/storage';
 import {getKey} from "../lib/util";
 
 function Todo() {
-  const [items, putItems, clearItems] = useStorage();
+  const [items, addItem, updateItem, clearItems] = useFbStorage();
   // const [items, putItems] = React.useState([
   //     /* テストコード 開始 */
   //   { key: getKey(), text: '日本語の宿題', done: false },
@@ -37,17 +38,19 @@ function Todo() {
   });
   
   const handleCheck = checked => {
-    const newItems = items.map(item => {
-      if (item.key === checked.key) {
-        item.done = !item.done;
-      }
-      return item;
-    });
-    putItems(newItems);
+    // const newItems = items.map(item => {
+    //   if (item.key === checked.key) {
+    //     item.done = !item.done;
+    //   }
+    //   return item;
+    // });
+    // putItems(newItems);
+    updateItem(checked);
   };
   
   const handleAdd = text => {
-    putItems([...items, { key: getKey(), text, done: false }]);
+    // putItems([...items, { key: getKey(), text, done: false }]);
+    addItem({ text, done: false });
   };
 
   
@@ -65,7 +68,8 @@ function Todo() {
       />
       {displayItems.map(item => (
         <TodoItem 
-          key={item.key}
+          // key={item.key}
+          key={item.id}
           item={item}
           onCheck={handleCheck}
         />
